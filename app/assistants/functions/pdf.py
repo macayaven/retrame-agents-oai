@@ -47,8 +47,8 @@ def _get_gcs_client():  # pragma: no cover – GCS client setup
         return storage.Client(project=PROJECT_ID)
 
 
-def generate_pdf(session_dict: dict[str, Any]) -> dict[str, str]:
-    """Create the PDF, upload, and return a signed public URL.
+def generate_pdf_legacy(session_dict: dict[str, Any]) -> dict[str, str]:
+    """Create the PDF, upload, and return a signed public URL (legacy interface).
 
     Parameters
     ----------
@@ -92,3 +92,40 @@ def generate_pdf(session_dict: dict[str, Any]) -> dict[str, str]:
         public_url = f"data:application/pdf;base64,{base64.b64encode(pdf_bytes).decode()}"
 
     return {"pdf_url": public_url}
+
+
+async def generate_pdf(context: dict[str, Any], analysis: dict[str, Any]) -> dict[str, str]:
+    """Generate PDF for the orchestrator (returns base64 and filename).
+    
+    This is the new interface expected by the orchestrator.
+    
+    Args:
+        context: User context from collect_context
+        analysis: Analysis results from analyse_and_reframe
+        
+    Returns:
+        Dictionary with pdf_base64 and filename
+    """
+    import base64
+    
+    # Build the PDF using the existing function
+    session_dict = {
+        "intake_data": context,
+        "analysis_output": analysis.get("analysis", "")
+    }
+    
+    pdf_bytes = build_pdf_bytes(
+        intake_data=context,
+        analysis_output=analysis.get("analysis", ""),
+    )
+    
+    # Generate filename
+    name = context.get("name", "usuario").lower().replace(" ", "_")
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f"resumen_{name}_{timestamp}.pdf"
+    
+    # Return base64 encoded PDF
+    return {
+        "pdf_base64": base64.b64encode(pdf_bytes).decode(),
+        "filename": filename
+    }

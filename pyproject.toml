@@ -29,6 +29,13 @@ dependencies = [
     "langfuse>=3.0.6",
     "supabase>=2.16.0",
     "requests==2.32.4",
+    # FastAPI + WebSocket
+    "fastapi>=0.100.0",
+    "uvicorn[standard]>=0.23.0",
+    "websockets>=11.0",
+    # Google Cloud Storage
+    "google-cloud-storage>=2.10.0",
+    "google-cloud-secret-manager>=2.16.0",
     # Compatibility + typing
     "charset-normalizer==3.4.2",
     "certifi==2025.6.15",

@@ -367,7 +367,39 @@ class OrchestratorAssistant:
             result = await OrchestratorStubs.execute_tool(tool_name, arguments, self.session_state)
             self.process_tool_result(tool_name, result)
             return result
-        raise NotImplementedError("Real tool execution not implemented yet")
+        
+        # Import real functions
+        from app.assistants.functions import (
+            analyse_and_reframe,
+            collect_context,
+            generate_pdf,
+            gcs_upload,
+            safe_complete,
+        )
+        
+        # Map tool names to functions
+        tool_map = {
+            "collect_context": collect_context,
+            "analyse_and_reframe": analyse_and_reframe,
+            "generate_pdf": generate_pdf,
+            "gcs_upload": gcs_upload,
+            "safe_complete": safe_complete,
+        }
+        
+        # Execute the real tool
+        if tool_name in tool_map:
+            func = tool_map[tool_name]
+            
+            # Special handling for collect_context which needs transcript
+            if tool_name == "collect_context":
+                result = await func(messages=self.session_state.transcript)
+            else:
+                result = await func(**arguments)
+            
+            self.process_tool_result(tool_name, result)
+            return result
+        
+        raise ValueError(f"Unknown tool: {tool_name}")
 
     async def create_assistant(self) -> str:
         """Create an OpenAI Assistant with the orchestrator tools.
