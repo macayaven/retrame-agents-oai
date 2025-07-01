@@ -1,0 +1,30 @@
+steps:
+  # Build the Docker image for amd64
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['buildx', 'build', '--platform', 'linux/amd64', '-t', 'europe-west1-docker.pkg.dev/$PROJECT_ID/reframe-edge/reframe-orchestrator:latest', '.']
+    
+  # Push to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'europe-west1-docker.pkg.dev/$PROJECT_ID/reframe-edge/reframe-orchestrator:latest']
+    
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'reframe-edge'
+      - '--image'
+      - 'europe-west1-docker.pkg.dev/$PROJECT_ID/reframe-edge/reframe-orchestrator:latest'
+      - '--region'
+      - 'europe-west1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--port'
+      - '8080'
+      - '--memory'
+      - '1Gi'
+      
+images:
+  - 'europe-west1-docker.pkg.dev/$PROJECT_ID/reframe-edge/reframe-orchestrator:latest'

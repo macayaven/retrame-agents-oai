@@ -1,10 +1,11 @@
 import json
 import logging
+import os
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.assistants.orchestrator_assistant import orchestrator_loop
+from app.assistants.orchestrator_assistant import OrchestratorAssistant
 from app.assistants.state import SessionState
 
 app = FastAPI(title="Reframe Edge API")
@@ -33,7 +34,7 @@ async def root():
 
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy"}
+    return {"status": "ok"}
 
 
 @app.websocket("/chat/{session_id}")
@@ -44,8 +45,8 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
     logger.info(f"WebSocket connection established for session: {session_id}")
 
     try:
-        # Create session state
-        session_state = SessionState(session_id=session_id)
+        # Create orchestrator
+        orchestrator = OrchestratorAssistant(use_stubs=True)
 
         while True:
             # Receive message from client
@@ -64,44 +65,21 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
             elif message.get("type") == "user_msg":
                 user_message = message.get("data", {}).get("message", "")
 
-                # Process message through orchestrator
-                async for event in orchestrator_loop(user_message, session_state):
-                    if event["type"] == "assistant_message":
-                        # Stream assistant response
-                        await websocket.send_json({
-                            "type": "assistant_stream",
-                            "data": {
-                                "content": event["content"],
-                                "phase": session_state.current_phase
-                            }
-                        })
-
-                    elif event["type"] == "phase_change":
-                        # Notify phase change
-                        await websocket.send_json({
-                            "type": "phase_change",
-                            "data": {
-                                "from_phase": event["from_phase"],
-                                "to_phase": event["to_phase"]
-                            }
-                        })
-
-                    elif event["type"] == "pdf_ready":
-                        # Notify PDF is ready
-                        await websocket.send_json({
-                            "type": "pdf_ready",
-                            "data": {
-                                "url": event["url"],
-                                "filename": event["filename"]
-                            }
-                        })
+                # Simple echo response for now
+                await websocket.send_json({
+                    "type": "assistant_stream",
+                    "data": {
+                        "content": f"Echo: {user_message}",
+                        "phase": "S0_START"
+                    }
+                })
 
                 # Send completion signal
                 await websocket.send_json({
                     "type": "complete",
                     "data": {
                         "session_id": session_id,
-                        "phase": session_state.current_phase
+                        "phase": "S0_START"
                     }
                 })
 

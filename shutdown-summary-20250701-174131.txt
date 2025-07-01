@@ -1,0 +1,18 @@
+Emergency Shutdown Summary
+========================
+Date: Tue Jul  1 17:41:31 CEST 2025
+Project: macayaven
+Region: europe-west1
+
+Resources Cleaned:
+- Cloud Run: reframe-edge (deleted)
+- Docker Images: All images in reframe-edge repository (deleted)
+- GCS Bucket: reframe-apd-pdf (deleted)
+- Secret Manager: reframe-edge-sa-key (deleted)
+
+Remaining Resources (minimal/no cost):
+- Artifact Registry repository: reframe-edge (empty)
+- Service Account: reframe-edge-sa@macayaven.iam.gserviceaccount.com
+- GitHub repositories and code
+
+Estimated ongoing cost: < /month

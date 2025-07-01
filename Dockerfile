@@ -11,24 +11,30 @@ RUN apt-get update && apt-get install -y \
 # Set working directory
 WORKDIR /app
 
-# Copy dependency files
+# Copy all necessary files
 COPY pyproject.toml ./
 COPY uv.lock ./
+COPY README.md ./
+COPY app/ ./app/
 
 # Install uv for faster dependency installation
 RUN pip install uv
 
-# Install dependencies
-RUN uv sync --no-dev
+# Create virtual environment and install dependencies
+RUN uv venv .venv && \
+    . .venv/bin/activate && \
+    uv pip install -e .
 
-# Copy application code
-COPY app/ ./app/
+# Stage 2: Runtime
+FROM python:3.12-slim
 
-# Stage 2: Runtime (distroless)
-FROM gcr.io/distroless/python3-debian12
+# Install runtime dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copy Python site-packages from builder
-COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+# Copy virtual environment from builder
+COPY --from=builder /app/.venv /app/.venv
 
 # Copy application from builder
 COPY --from=builder /app /app
@@ -44,5 +50,5 @@ WORKDIR /app
 # Expose port
 EXPOSE 8080
 
-# Run the application
-ENTRYPOINT ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
+# Activate virtual environment and run the application
+ENTRYPOINT ["/app/.venv/bin/python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
