@@ -5,7 +5,7 @@ import pytest
 from app.assistants.functions.analyse import analyse_and_reframe
 from app.assistants.functions.collect import collect_context
 from app.assistants.functions.escalate import escalate_crisis
-from app.assistants.functions.pdf import generate_pdf
+from app.assistants.functions.pdf import generate_pdf_legacy as generate_pdf
 
 
 @pytest.mark.asyncio
