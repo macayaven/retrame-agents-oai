@@ -15,4 +15,4 @@ async def test_full_pipeline_offline():
     result = await run_pipeline(user_msgs)
     assert "pdf_url" in result and result["pdf_url"].startswith("data:application/pdf;base64,")
     analysis = result["analysis"]
-    assert analysis["certainty_before"] < analysis["certainty_after"] 
+    assert analysis["certainty_before"] < analysis["certainty_after"]

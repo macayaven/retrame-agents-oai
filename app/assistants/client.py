@@ -5,8 +5,8 @@ clean and also simplifies patching in unit tests.
 """
 from __future__ import annotations
 
-import os
 from functools import lru_cache
+import os
 
 from openai import AsyncOpenAI
 
@@ -23,4 +23,4 @@ def get_openai_client() -> AsyncOpenAI:
     if not api_key:
         raise RuntimeError("OPENAI_API_KEY environment variable is not set")
 
-    return AsyncOpenAI(api_key=api_key) 
+    return AsyncOpenAI(api_key=api_key)

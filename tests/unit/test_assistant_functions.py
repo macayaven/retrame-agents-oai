@@ -2,10 +2,10 @@ import base64
 
 import pytest
 
-from app.assistants.functions.collect import collect_context
 from app.assistants.functions.analyse import analyse_and_reframe
-from app.assistants.functions.pdf import generate_pdf
+from app.assistants.functions.collect import collect_context
 from app.assistants.functions.escalate import escalate_crisis
+from app.assistants.functions.pdf import generate_pdf
 
 
 @pytest.mark.asyncio
@@ -49,4 +49,4 @@ def test_generate_pdf_stub(monkeypatch, in_memory, supabase_env_vars):
 def test_escalate_crisis():
     resp = escalate_crisis()
     assert resp["crisis"] is True
-    assert "024" in str(resp["message"]) 
+    assert "024" in str(resp["message"])

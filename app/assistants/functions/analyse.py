@@ -9,7 +9,7 @@ from __future__ import annotations
 import json
 import os
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from app.assistants.client import get_openai_client
 
@@ -36,10 +36,10 @@ _CRISIS_RE = re.compile("|".join(_CRISIS_PHRASES), re.IGNORECASE)
 
 
 async def analyse_and_reframe(
-    intake_json: Dict[str, Any],
+    intake_json: dict[str, Any],
     *,
     client=None,
-) -> Dict[str, Any]:  # noqa: D401
+) -> dict[str, Any]:
     """Return cognitive analysis dict.
 
     When the `openai` client can be initialised, we perform a live call; in all
@@ -90,7 +90,7 @@ async def analyse_and_reframe(
             # The model *should* return JSON but we parse defensively.
             json_start = raw.find("{")
             json_part = raw[json_start:]
-            parsed: Dict[str, Any] = json.loads(json_part)
+            parsed: dict[str, Any] = json.loads(json_part)
             # basic sanity check
             if "balanced_thought" in parsed and "micro_action" in parsed:
                 return parsed
@@ -108,7 +108,7 @@ async def analyse_and_reframe(
 # ---------------------------------------------------------------------------
 
 
-def _stub_payload() -> Dict[str, Any]:
+def _stub_payload() -> dict[str, Any]:
     """Return a hard-coded payload for test predictability."""
 
     return {
@@ -119,4 +119,4 @@ def _stub_payload() -> Dict[str, Any]:
         "micro_action": "Message a friend and ask their genuine opinion—should take <10 min.",
         "certainty_before": 40,
         "certainty_after": 65,
-    } 
+    }

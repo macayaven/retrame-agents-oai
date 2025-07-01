@@ -14,7 +14,7 @@ import argparse
 import asyncio
 import json
 import sys
-from typing import Any, Dict, List
+from typing import Any
 
 from app.assistants.functions.analyse import analyse_and_reframe
 from app.assistants.functions.collect import collect_context
@@ -25,7 +25,7 @@ from app.assistants.functions.pdf import generate_pdf
 from app.assistants.state import SessionState
 
 
-async def run_pipeline(user_messages: List[str]) -> Dict[str, Any]:
+async def run_pipeline(user_messages: list[str]) -> dict[str, Any]:
     """Run the full collect → analyse → pdf pipeline synchronously.
 
     Parameters
@@ -73,7 +73,7 @@ async def run_pipeline(user_messages: List[str]) -> Dict[str, Any]:
 # ---------------------------------------------------------------------------
 
 
-def _parse_args(argv: List[str]) -> argparse.Namespace:
+def _parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run Reframe-APD Assistants demo")
     parser.add_argument(
         "--messages",
@@ -83,7 +83,7 @@ def _parse_args(argv: List[str]) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
-async def _main(argv: List[str]) -> None:  # pragma: no cover – CLI entry
+async def _main(argv: list[str]) -> None:  # pragma: no cover – CLI entry
     args = _parse_args(argv)
     if args.messages:
         user_msgs = args.messages
@@ -104,4 +104,4 @@ async def _main(argv: List[str]) -> None:  # pragma: no cover – CLI entry
 
 
 if __name__ == "__main__":  # pragma: no cover
-    asyncio.run(_main(sys.argv[1:])) 
+    asyncio.run(_main(sys.argv[1:]))

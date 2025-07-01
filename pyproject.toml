@@ -51,6 +51,7 @@ dependencies = [
     "pytest-asyncio>=1.0.0",
     "openai>=1.14.0",
     "pytest-faker>=2.0.0",
+    "google-cloud-translate>=3.21.0",
 ]
 
 # ─────────────── Optional groups (install with `uv pip install -e .[dev]`) ─────────────── #

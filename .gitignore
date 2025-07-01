@@ -25,3 +25,6 @@ __pycache__/
 
 # Project-specific ignores
 app/assistants/functions/__pycache__/pdf.cpython-312.pyc
+.mypy_cache/
+.pytest_cache
+.ruff_cache
