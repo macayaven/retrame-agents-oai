@@ -1,0 +1,26 @@
+{
+    "eval_set_id": "happy_flow",
+    "eval_cases": [
+        {
+            "evalId": "case_1",
+            "conversation": [
+                {
+                    "userContent": {
+                        "parts": [
+                            {
+                                "text": "I'm feeling anxious about an upcoming presentation."
+                            }
+                        ]
+                    },
+                    "reference": {
+                        "parts": [
+                            {
+                                "text": "It's understandable to feel anxious before a presentation. Let's try to break down what's making you anxious and see if we can find a more balanced perspective."
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ]
+}

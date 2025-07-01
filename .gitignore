@@ -1,0 +1,27 @@
+# Python bytecode and cache files
+**/__pycache__/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Caches
+.pytest_cache/
+*.cache
+*.cache.*
+
+# Virtual environments
+.venv/
+.env/
+
+# IDE/editor settings
+.vscode/
+.cursor/
+.cursorrules
+.cursor/nom
+
+# macOS system files
+.DS_Store
+
+# Project-specific ignores
+app/assistants/functions/__pycache__/pdf.cpython-312.pyc
