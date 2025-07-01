@@ -17,13 +17,12 @@ $ python scripts/clone_prompts.py \
 """
 
 import argparse
+from collections.abc import Callable
+from datetime import UTC, datetime
 import os
 import re
-from datetime import UTC, datetime
-from typing import Callable
 
 from langfuse import Langfuse
-
 
 # ---------------------------------------------------------------------------
 # Text fix-ups
@@ -110,7 +109,7 @@ def _clone_prompt(src: str, dst: str, fixer: Callable[[str], str] = _fix_prompt)
 # ---------------------------------------------------------------------------
 
 
-def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:  # noqa: D401
+def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Clone and fix a Langfuse prompt")
     p.add_argument("--source", required=True, help="Existing prompt key to clone")
     p.add_argument("--target", required=True, help="New prompt key to create")
@@ -123,4 +122,4 @@ def main() -> None:  # pragma: no cover
 
 
 if __name__ == "__main__":  # pragma: no cover
-    main() 
+    main()
