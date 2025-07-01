@@ -6,8 +6,6 @@ Returns the Spanish crisis hotline and EU emergency number.  The text mirrors
 
 from __future__ import annotations
 
-from typing import Dict, Union
-
 _CRISIS_MSG = (
     "Parece que estás pasando por un momento muy difícil y podrías estar pensando en hacerte daño. "
     "Por favor, llama inmediatamente al **024** (línea de ayuda en España, 24 h, gratuita) o al "
@@ -17,6 +15,6 @@ _CRISIS_MSG = (
 )
 
 
-def escalate_crisis(msg: str | None = None) -> Dict[str, Union[str, bool]]:  # noqa: D401
+def escalate_crisis(msg: str | None = None) -> dict[str, str | bool]:
     """Return crisis safe-completion payload."""
-    return {"crisis": True, "message": _CRISIS_MSG} 
+    return {"crisis": True, "message": _CRISIS_MSG}

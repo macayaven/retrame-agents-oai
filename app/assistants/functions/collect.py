@@ -13,7 +13,7 @@ modes:
 from __future__ import annotations
 
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from app.assistants.client import get_openai_client
 from app.callbacks.lang_detect import LangCallback
@@ -50,10 +50,10 @@ _CRISIS_RE = re.compile("|".join(_CRISIS_PHRASES), re.IGNORECASE)
 
 async def collect_context(
     *,
-    thread_id: Optional[str] = None,
-    messages: Optional[List[Dict[str, Any]]] = None,
+    thread_id: str | None = None,
+    messages: list[dict[str, Any]] | None = None,
     max_turns: int = 5,
-) -> Dict[str, Any]:  # noqa: D401
+) -> dict[str, Any]:
     """Return a JSON payload with ``goal_reached`` and ``intake_data`` keys.
 
     On success::
@@ -85,15 +85,15 @@ async def collect_context(
     user_msgs = [m for m in messages if m.get("role") == "user"][-max_turns:]
 
     # Intake fields (see design.md §C)
-    trigger_situation: Optional[str] = None
-    automatic_thought: Optional[str] = None
-    emotion_label: Optional[str] = None
-    emotion_intensity: Optional[int] = None
-    reason: Optional[str] = None  # ≤35-word help-seek description
+    trigger_situation: str | None = None
+    automatic_thought: str | None = None
+    emotion_label: str | None = None
+    emotion_intensity: int | None = None
+    reason: str | None = None  # ≤35-word help-seek description
 
     # Optional demographic
-    name: Optional[str] = None
-    age: Optional[int] = None
+    name: str | None = None
+    age: int | None = None
 
     # ---------------------------------------------------------------------
     # 2. Extract fields from user messages (naïve regex heuristic)
@@ -175,7 +175,7 @@ async def collect_context(
     # ---------------------------------------------------------------------
     # 4. Produce response
     # ---------------------------------------------------------------------
-    missing: List[str] = []
+    missing: list[str] = []
     # Required fields per spec
     if trigger_situation is None:
         missing.append("trigger_situation")
@@ -188,7 +188,7 @@ async def collect_context(
 
     goal_reached = not missing
 
-    payload: Dict[str, Any] = {
+    payload: dict[str, Any] = {
         "goal_reached": goal_reached,
         "lang": lang,
         "crisis": crisis_detected,
@@ -214,7 +214,7 @@ async def collect_context(
 # ---------------------------------------------------------------------------
 
 
-def _normalise(msg: Dict[str, Any] | str) -> str:
+def _normalise(msg: dict[str, Any] | str) -> str:
     """Return lowercase trimmed text from a message dict or string."""
 
     if isinstance(msg, str):
@@ -223,4 +223,4 @@ def _normalise(msg: Dict[str, Any] | str) -> str:
     text = msg.get("content") or ""
     if isinstance(text, list):  # OpenAI may return list of content parts
         text = " ".join(str(p) for p in text)
-    return str(text).strip().lower() 
+    return str(text).strip().lower()

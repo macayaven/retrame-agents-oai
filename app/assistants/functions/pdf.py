@@ -6,7 +6,7 @@ layout identical to the ADK implementation.
 from __future__ import annotations
 
 import os
-from typing import Any, Dict
+from typing import Any
 
 from app.tools.pdf_generator import build_pdf_bytes
 
@@ -30,7 +30,7 @@ def _get_supabase_client():  # pragma: no cover – trivial wrapper
     return create_client(url, key)
 
 
-def generate_pdf(session_dict: Dict[str, Any]) -> Dict[str, str]:  # noqa: D401
+def generate_pdf(session_dict: dict[str, Any]) -> dict[str, str]:
     """Create the PDF, upload, and return a signed public URL.
 
     Parameters
@@ -64,4 +64,4 @@ def generate_pdf(session_dict: Dict[str, Any]) -> Dict[str, str]:  # noqa: D401
 
         public_url = f"data:application/pdf;base64,{base64.b64encode(pdf_bytes).decode()}"
 
-    return {"pdf_url": public_url} 
+    return {"pdf_url": public_url}
